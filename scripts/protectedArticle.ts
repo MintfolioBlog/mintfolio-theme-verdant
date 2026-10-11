@@ -1,4 +1,6 @@
-import { createProtectedArticleController, parseEncryptedArticle, onPage } from '@mintfolio/core/client';
+import { createProtectedArticleController } from '@mintfolio/core/client/protectedArticle';
+import { parseEncryptedArticle } from '@mintfolio/theme-api/crypto';
+import { onPage } from './lifecycle';
 import { createArticleToc } from './protectedToc';
 
 onPage('[data-protected-post]', (root, scope) => {

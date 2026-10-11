@@ -1,4 +1,4 @@
-import { copyText, resolveCodeLanguage, extractCodeText } from '@mintfolio/core/client';
+import { copyText, resolveCodeLanguage, extractCodeText } from '@mintfolio/core/client/code';
 import { onPage } from './lifecycle';
 
 function createIcon(kind: 'clipboard' | 'check' | 'error'): SVGSVGElement {

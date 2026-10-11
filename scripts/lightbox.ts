@@ -1,4 +1,5 @@
-import { createLightboxController, type PageScope } from '@mintfolio/core/client';
+import { createLightboxController } from '@mintfolio/core/client/lightbox';
+import type { PageScope } from './lifecycle';
 
 /** Verdant provides its controls; all preview behavior comes from Core. */
 export function initLightbox(root: HTMLElement, scope: PageScope): void {
