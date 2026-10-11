@@ -1,10 +1,11 @@
 {
   "name": "@mintfolio/theme-verdant",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Verdant, a Mintfolio theme for personal homepages and quiet reading.",
   "type": "module",
   "files": [
     "theme.mjs",
+    "examples",
     "settings.ts",
     "pages",
     "layouts",
