@@ -1,4 +1,5 @@
-import { createTocController, type PageScope } from '@mintfolio/core/client';
+import { createTocController } from '@mintfolio/core/client/toc';
+import type { PageScope } from './lifecycle';
 
 export function initTocDrawer(scope: PageScope): void {
   const toggle = document.getElementById('toc-toggle');

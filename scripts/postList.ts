@@ -1,8 +1,9 @@
 import type { PageScope } from './lifecycle';
 import type { PostFilters, PostItem } from '../utils/types';
 
-import { createPostListController, searchPosts } from '@mintfolio/core/client';
-export { emptyFilters } from '@mintfolio/core/client';
+import { createPostListController } from '@mintfolio/core/client/postList';
+import { searchPosts } from '@mintfolio/theme-api/search';
+export { emptyFilters } from '@mintfolio/theme-api/search';
 
 interface PostListSnapshot {
   href: string;
@@ -20,8 +21,8 @@ function readSnapshot(url: URL): PostListSnapshot | null {
   return { href: value.href, limit: value.limit, autoLoadEnabled: value.autoLoadEnabled === true, filters: value.filters };
 }
 
-/** Restore layout before Astro restores scroll, otherwise the short initial list clamps it. */
-function restoreListDocument(root: Document, url: URL, snapshot: PostListSnapshot | null): void {
+/** Restore a destination document before Astro restores scroll. Reads only matching history snapshots; mutates card visibility, never history. */
+export function restoreListDocument(root: Document, url: URL, snapshot = readSnapshot(url)): void {
   const hero = root.querySelector<HTMLElement>('#hero');
   if (hero && url.hash === '#content') {
     hero.classList.add('collapsed');
@@ -39,18 +40,8 @@ function restoreListDocument(root: Document, url: URL, snapshot: PostListSnapsho
   root.getElementById('load-more-wrap')?.classList.toggle('hidden', matches.length <= snapshot.limit);
 }
 
-document.addEventListener('astro:before-preparation', () => {
-  // Stop an article's smooth section scroll before its queued frames can move the next page.
-  window.scrollTo({ left: window.scrollX, top: window.scrollY, behavior: 'instant' });
-});
-
-document.addEventListener('astro:before-swap', (event) => {
-  // Astro restores history coordinates before page-load; CSS smooth scrolling can interrupt that restoration.
-  if (event.navigationType === 'traverse') event.newDocument.documentElement.dataset.restoringScroll = 'true';
-  restoreListDocument(event.newDocument, event.to, event.navigationType === 'traverse' ? readSnapshot(event.to) : null);
-});
-document.addEventListener('astro:page-load', () => { delete document.documentElement.dataset.restoringScroll; });
-restoreListDocument(document, new URL(location.href), readSnapshot(new URL(location.href)));
+// Direct entry restores the same list layout as history traversal.
+restoreListDocument(document, new URL(location.href));
 
 export function readPostItems(root: ParentNode): PostItem[] {
   return Array.from(root.querySelectorAll<HTMLElement>('.post-card'), (element) => ({

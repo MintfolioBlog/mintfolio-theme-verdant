@@ -2,7 +2,8 @@ import type { PageScope } from './lifecycle';
 import { emptyFilters } from './postList';
 import type { PostFilters, PostItem } from '../utils/types';
 
-import { createPostListController, readFiltersFromUrl as readUrlFilters, writeFiltersToUrl as writeUrlFilters } from '@mintfolio/core/client';
+import { createPostListController } from '@mintfolio/core/client/postList';
+import { readFiltersFromUrl as readUrlFilters, writeFiltersToUrl as writeUrlFilters } from '@mintfolio/theme-api/search';
 
 /** Read the current document's query state through the same parser used by Core. */
 export function readFiltersFromUrl(): PostFilters {

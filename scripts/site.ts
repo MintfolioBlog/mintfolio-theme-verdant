@@ -4,7 +4,7 @@ import { readStorage, writeStorage } from '../utils/storage';
 import { onPage } from './lifecycle';
 import { initTheme } from './theme';
 import { rememberArticleOrigin } from './articleOrigin';
-import './postList';
+import './navigation';
 import './progress';
 
 function getCurrentArticleBackHref(): string {

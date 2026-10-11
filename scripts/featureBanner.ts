@@ -8,7 +8,7 @@ const DECODE_WAIT_MS = 600;
  * Home "值得一读" banner. Slides are stacked and crossfaded by toggling
  * `.is-active`; CSS animates only opacity and transform. Autoplay pauses
  * (and later resumes where it stopped) while the reader hovers, focuses
- * inside, or the tab is hidden. Reduced motion disables autoplay.
+ * inside, the banner is outside the viewport, or the tab is hidden. Reduced motion disables autoplay.
  */
 export function initFeatureBanner(scope: PageScope): void {
   const root = document.querySelector<HTMLElement>('[data-feature-banner]');
@@ -28,6 +28,9 @@ export function initFeatureBanner(scope: PageScope): void {
   let progress: Animation | null = null;
   let hovered = false;
   let focused = false;
+  let visible = false;
+  let decoding = false;
+  let pendingTarget: number | null = null;
 
   const show = (next: number): void => {
     index = next;
@@ -36,15 +39,22 @@ export function initFeatureBanner(scope: PageScope): void {
   };
 
   const pause = (): void => {
-    if (!timer) return;
-    window.clearTimeout(timer);
-    timer = 0;
-    remaining -= performance.now() - startedAt;
+    if (timer) {
+      window.clearTimeout(timer);
+      timer = 0;
+      remaining = Math.max(0, remaining - (performance.now() - startedAt));
+    }
     progress?.pause();
   };
 
   const resume = (): void => {
-    if (!autoplay || timer || hovered || focused || document.hidden) return;
+    if (signal.aborted || document.hidden || !visible || decoding) return;
+    if (pendingTarget !== null) {
+      const target = pendingTarget;
+      pendingTarget = null;
+      show(target);
+    }
+    if (!autoplay || timer || hovered || focused) return;
     if (!progress) {
       // Composited countdown on the active dot; no layout or style recalculation per frame.
       progress = dots[index]?.querySelector('.banner-dot-fill')?.animate(
@@ -64,6 +74,8 @@ export function initFeatureBanner(scope: PageScope): void {
     const target = (next + slides.length) % slides.length;
     if (target === index) return;
     const ticket = ++switching;
+    decoding = true;
+    pendingTarget = null;
     pause();
     progress?.cancel();
     progress = null;
@@ -78,7 +90,10 @@ export function initFeatureBanner(scope: PageScope): void {
       ]);
     }
     if (ticket !== switching || signal.aborted) return;
-    show(target);
+    decoding = false;
+    // A decode can finish offscreen; defer the visual switch until visible again.
+    if (!visible || document.hidden) pendingTarget = target;
+    else show(target);
     resume();
   };
 
@@ -130,7 +145,16 @@ export function initFeatureBanner(scope: PageScope): void {
     resume();
   }, { signal });
   document.addEventListener('visibilitychange', () => (document.hidden ? pause() : resume()), { signal });
+  const visibility = new IntersectionObserver(([entry]) => {
+    visible = Boolean(entry?.isIntersecting);
+    if (visible) resume();
+    else pause();
+  });
+  visibility.observe(root);
   scope.add(() => {
+    visibility.disconnect();
+    switching += 1;
+    pendingTarget = null;
     window.clearTimeout(timer);
     progress?.cancel();
   });
