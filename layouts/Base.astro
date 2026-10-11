@@ -34,11 +34,9 @@ const { theme, page } = Astro.props;
 <html lang={page.seo.language} data-hide-scrollbars="true">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href={faviconSvg} />
-    <link rel="icon" href={faviconIco} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" id="browser-theme-color" content="#f6f8ef" transition:persist="browser-theme-color" />
-    <SeoHead seo={page.seo} />
+    <SeoHead seo={page.seo} faviconFallback={[{ href: faviconSvg, type: 'image/svg+xml' }, { href: faviconIco }]} />
     <meta name="generator" content={Astro.generator} />
     <ClientRouter />
     <noscript>

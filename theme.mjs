@@ -11,10 +11,10 @@ export default defineTheme({
   manifest: {
     id: 'verdant',
     name: 'Verdant',
-    version: '0.4.0',
+    version: '0.4.1',
     author: 'Mintfolio contributors',
     description: 'Portfolio hero, article cards, reading tools, and eight visitor-selectable palettes.',
-    engine: '^1.1.0',
+    engine: '^1.3.0',
   },
   capabilities: { encryptedPosts: true, search: true, tags: true, categories: true, toc: true, darkMode: true },
   build: { react: true, tailwind: true },
