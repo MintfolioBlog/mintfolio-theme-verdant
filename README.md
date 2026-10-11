@@ -39,7 +39,7 @@ export default {
 
 initialPalette 使用字符串 '1' 到 '8'。访客在浏览器中保存的配色偏好优先于初始值。网站标题、头像和项目内容放在 site.config.ts；侧栏、推荐文章和文末插图放在主题设置中。
 
-全部选项见 [设置模板](config/theme-verdant.config.mjs) 与 [主题配置教程](https://github.com/MintfolioBlog/mintfolio/wiki/Themes)。未填写的字段使用默认值；对象递归合并，数组整体替换。
+全部选项见 [完整配置示例](examples/theme.config.mjs)（逐项注明用途、默认值和可选值，可直接复制为站点的 `_mintfolio/theme.config.mjs`）、[设置模板](config/theme-verdant.config.mjs) 与 [主题配置教程](https://github.com/MintfolioBlog/mintfolio/wiki/Themes)。未填写的字段使用默认值；对象递归合并，数组整体替换。
 
 部署到 Astro `base` 指定的子目录时，推荐文章图片、文末插图及推荐工具的站内根路径（例如 `/images/footer.webp`）会自动加上该前缀；已经带前缀的路径不会重复处理，外部 URL 保持原样。文章、菜单和头像地址直接使用 Core 提供的结果。
 
