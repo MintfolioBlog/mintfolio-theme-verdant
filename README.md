@@ -15,7 +15,7 @@ mintfolio theme install verdant --use
 mintfolio dev
 ~~~
 
-Verdant 0.3 需要 Core >= 0.3.0，使用 Theme API 1.1 的分页、独立页面与全文搜索。
+Verdant 0.4.2 需要 Core ^0.4.2 和 Theme API ^1.4.0，使用按需加载的客户端控制器；保留分页、独立页面、全文搜索与站点 favicon 配置。
 
 Verdant 的 npm 包名是 @mintfolio/theme-verdant，清单 id 为 verdant。命令行可使用 verdant 简写。
 
